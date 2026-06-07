@@ -1,0 +1,62 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Attendance {
+  id Int @id @default(autoincrement())
+
+  player_id Int
+  Stats_id Int
+  training_session_id Int
+
+  Player Player @relation(fields: [player_id], references: [id])
+  Stats Stats @relation(fields: [Stats_id], references: [id])
+  TrainingSession TrainingSession @relation(fields: [training_session_id], references: [id])
+}
+
+model Match {
+  opposition_name   String?   @db.VarChar(100)
+  venue             String?   @db.VarChar(100)
+  date              DateTime? @db.Date
+  time              DateTime? @db.Time(6)
+  opposition_goals  Int?
+  opposition_points Int?
+  referee_name      String?   @db.VarChar(100)
+  goals             Int?
+  points            Int?
+  duration_minutes  Int?
+  id                Int       @id(map: "matches_pkey")
+}
+
+model Player {
+  id         Int          @id @default(autoincrement())
+  first_name String?      @db.VarChar(100)
+  last_name  String?      @db.VarChar(100)
+  created_at DateTime?    @default(now()) @db.Timestamp(6)
+  Attendance Attendance[]
+}
+
+model Stats {
+  total_distance_m Int?
+  id               Int          @id(map: "Stats_pkey")
+  Attendance       Attendance[]
+}
+
+model Team {
+  team_name String? @db.VarChar(100)
+  level     String? @db.VarChar(100)
+  id        Int     @id(map: "teams_pkey")
+}
+
+model TrainingSession {
+  date             DateTime?    @db.Date
+  time             DateTime?    @db.Time(6)
+  duration_minutes Int?
+  id               Int          @id(map: "training_sessions_pkey")
+  Attendance       Attendance[]
+}

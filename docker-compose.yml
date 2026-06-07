@@ -22,16 +22,17 @@ services:
       - PORT=3001
 
   postgres:
-    image: postgres:16
-    restart: always
+    image: postgres:17
+    container_name: imreoir-postgres
+    restart: unless-stopped
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: appdb
+      POSTGRES_USER: imreoir
+      POSTGRES_PASSWORD: imreoirpassword
+      POSTGRES_DB: imreoir
     ports:
       - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
 
 volumes:
-  pgdata:
+  postgres_data:
